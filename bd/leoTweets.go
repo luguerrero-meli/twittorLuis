@@ -22,7 +22,7 @@ func LeoTweets(ID string, page int64) ([]*models.DevuelveTweets, bool) {
 	var resultado []*models.DevuelveTweets
 
 	condicion := bson.M{
-		"userid": ID,
+		"userId": ID,
 	}
 
 	opciones := options.Find()

@@ -2,6 +2,8 @@ package routers
 
 import (
 	"encoding/json"
+	"fmt"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"net/http"
 
 	"github.com/luguerrero-meli/twittorLuis/bd"
@@ -17,7 +19,7 @@ func Registro(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Error en los datos recibidos"+err.Error(), 400)
 		return
 	}
-
+	fmt.Println(t.Email)
 	if len(t.Email) == 0 {
 		http.Error(w, "El email de usuario es requerido.", 400)
 		return
@@ -34,7 +36,9 @@ func Registro(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "El usuario ya existe.", 400)
 		return
 	}
+	t.ID = primitive.NewObjectID()
 
+	fmt.Print(t)
 	_, status, err := bd.InsertaRegistro(t)
 	if err != nil {
 		http.Error(w, "Ocurrrio un error al registrar el usuario."+err.Error(), 400)

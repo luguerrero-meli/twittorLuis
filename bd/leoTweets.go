@@ -2,6 +2,7 @@ package bd
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"time"
 
@@ -26,9 +27,9 @@ func LeoTweets(ID string, page int64) ([]*models.DevuelveTweets, bool) {
 	}
 
 	opciones := options.Find()
+	opciones.SetSkip((page - 1) * 20)
 	opciones.SetLimit(20)
 	opciones.SetSort(bson.D{{Key: "fecha", Value: -1}})
-	opciones.SetSkip((page - 1) * 20)
 
 	cursor, err := col.Find(ctx, condicion, opciones)
 
@@ -45,5 +46,13 @@ func LeoTweets(ID string, page int64) ([]*models.DevuelveTweets, bool) {
 		}
 		resultado = append(resultado, &registro)
 	}
+
+	err = cursor.Err()
+	if err != nil {
+		fmt.Println(err.Error())
+		return resultado, false
+	}
+	cursor.Close(ctx)
+
 	return resultado, true
 }
